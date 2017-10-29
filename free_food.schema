@@ -1,0 +1,43 @@
+CREATE TABLE events (name VARCHAR(200) NOT NULL,
+                  datetime DATETIME NOT NULL,
+                  location VARCHAR(200) NOT NULL,
+                  hyperlink VARCHAR(200) NOT NULL,
+                  description TEXT,
+                  id MEDIUMINT NOT NULL AUTO_INCREMENT,
+                  org_name VARCHAR(50),
+                  verified TINYINT(1),
+                  PRIMARY KEY (id),
+                  UNIQUE (name),
+                  FULLTEXT(description),
+                  FULLTEXT(name),
+                  INDEX(name)
+);
+
+CREATE TABLE organizations (name VARCHAR(50) NOT NULL,
+                  location VARCHAR(200) NOT NULL,
+                  hyperlink VARCHAR(100) NOT NULL,
+                  id MEDIUMINT NOT NULL AUTO_INCREMENT,
+                  PRIMARY KEY (id),
+                  UNIQUE (name),
+                  INDEX (name)
+);
+
+CREATE TABLE emails (email VARCHAR(50),
+                    PRIMARY KEY (email));
+CREATE TABLE notifications (
+                    email VARCHAR(50),
+                    event_name VARCHAR(200),
+                    FOREIGN KEY (email) REFERENCES emails(email),
+                    FOREIGN KEY (event_name) REFERENCES events(name)
+                );
+
+CREATE TABLE keywords (word VARCHAR(25) NOT NULL
+                      PRIMARY KEY (word))
+
+CREATE TABLE keyword_connectors (
+              word VARCHAR(25) UNIQUE NOT NULL,
+              event_name VARCHAR(150) NOT NULL,
+              FOREIGN KEY (word) REFERENCES keywords(word),
+              FOREIGN KEY (event_name) REFERENCES events(name),
+              PRIMARY KEY (word)
+)

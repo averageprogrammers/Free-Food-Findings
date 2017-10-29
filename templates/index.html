@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
+  <title>Free Food Findings</title>
+
+  <!-- CSS  -->
+  <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="/static/css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+  <link href="/static/css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+    </head>
+    <body>
+        <nav class="orange darken-3">
+            <div class="nav-wrapper">
+              <a href="{{url_for('home')}}" class="brand-logo" id="logo"><span style = "color: black">University</span> Food Finder</a>
+                <ul class="hide-on-med-and-down right">
+                    <li>
+                              <form action="{{url_for('search')}}" method="get">
+                              <div class="input-field col s6 s12 white-text">
+
+                                   <i class="white-text material-icons prefix">search</i>
+                                       <input type="text" name="keywords" placeholder="search" class="white-text">
+                                       <input type="submit" value="Submit" style="display:none">
+                                 </div>
+                                </form>
+                      </li>
+                      <li><a href="{{url_for('home')}}" class="white-text" style="">ALL EVENTS</a></li>
+                      <li><a href="{{url_for('all_orgs')}}" class="white-text" style="">ORGANIZATIONS</a></li>
+                      <li><a href="{{url_for('map')}}" class="white-text" style="margin-right:150px">MAP</a></li>
+                </ul>
+            </div>
+          </nav>
+<!--
+</head>
+<body>
+   <nav class="orange darken-3" role="navigation">
+    <div class="nav-wrapper container"><a id="logo-container" href="#" class="brand-logo">Free Food Findings</a>
+      <ul class="right hide-on-med-and-down">
+        <form>
+            <div class="input-field">
+              <input id="search" type="search" required>
+              <label class="label-icon" for="search"><i class="material-icons left">search</i></label>
+              <i class="material-icons">close</i>
+            </div>
+          </form>
+      </ul>
+      <ul class="left hide-on-med-and-down">
+        <form>
+           <div class="nav-wrapper">
+                <li><a class="dropdown-button" href="#!" data-activates="dropdown1">Sort by<i class="material-icons right">arrow_drop_down</i></a></li>
+                  <ul id='dropdown1' class='dropdown-content'>
+                    <li><a href="{{url_for('all_orgs')}}">organizations</a></li>
+                                        <li class="divider"></li>
+                    <li><a href="{url_for('all_orgs')}}">date</a></li>
+                  </ul>
+            </div>
+          </form>
+      </ul>
+
+
+      <ul id="nav-mobile" class="side-nav">
+        <li><a href="#">Menu</a></li>
+      </ul>
+      <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
+    </div>
+  </nav>
+
+
+   <nav class="orange darken-3" role="navigation">
+<div class="nav-wrapper"><a class="brand-logo" href="#">Food</a><a class="right button-collapse" href="#" data-activates="nav-mobile"><i class="mdi-navigation-more-vert"></i></a>
+    <ul class="right hide-on-med-and-down" id="nav-mobile">
+      <ul id="nav-mobile" class="right hide-on-med-and-down">
+        <li><a href="{{url_for('all_orgs')}}">Organizations</a></li>
+      </ul>
+    </ul>
+    <form class="orange darken-1" action="search" method="post">
+        <div class="input-field">
+          <input id="search" type="search"/>
+          <label for="search"></label><i class="material-icons left">search</i>
+        </div>
+    </form>
+</div>
+</nav>
+-->
+
+
+  <div class="container">
+    <div class="section" id = "list">
+        {{error}}
+        <ul class="collapsible popout" data-collapsible="expandable">
+            {% for e in events %}
+           <li>
+            <div class="collapsible-header">
+                <div class="left">
+                  <i class="material-icons waves-effect">expand_less</i>
+                  <span class = "flow-text">
+                    <span>{{ e.name }}</span>
+                    <span class="flow-text" style = "font-weight: bold"> | </span>
+                    <span>{{ e.org_name }}</span>
+                  </span>
+                 </div>
+                 <div class="right">
+                   <span>{{e.datetime.split(' ')[0].replace("-","/")}}</span>
+                 </div>
+            </div>
+            <div class="collapsible-body">
+                <a class = "flow-text" href="{{e.hyperlink}}">Link </a> <br>
+                <span class = "flow-text">Location : {{ e.location }}<span> <br>
+                <span>Description: {{ e.description }}</span>
+            </div>
+        </li>
+            {% endfor %}
+        </ul>
+    </div>
+    <br><br>
+  </div>
+
+  <footer class="page-footer blue-grey">
+    <div class="container">
+      <div class="row">
+        <div class="col l6 s12">
+          <h5 class="white-text">Who are we</h5>
+          <p class="grey-text text-lighten-4">We are a team of college students working on this project.</p>
+        </div>
+        <div class="col l4 offset-l2 s12">
+          <h5 class="white-text">Want to add an event?</h5>
+          <a href="{{url_for('add_event')}}"class="white black-text center waves-effect waves-light btn">Sumbit an event!</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-copyright">
+      <div class="container">
+      © 2017 HackTX
+      <!-- <a class="grey-text text-lighten-4 right" href="#!">More Links</a> -->
+      </div>
+    </div>
+  </footer>
+
+
+  <!--  Scripts-->
+  <script src="/static/js/jquery-3.2.1.min.js.css"></script>
+  <script src="/static/js/materialize.js"></script>
+  <script src="/static/js/init.js"></script>
+  </body>
+</html>

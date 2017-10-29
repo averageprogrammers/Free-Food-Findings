@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
+  <title>Free Food Findings</title>
+
+  <!-- CSS  -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="/static/css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+  <link href="/static/css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+  <link rel="stylesheet" href="/static/pickadate/themes/default.css" id="theme_base">
+<link rel="stylesheet" href="/static/pickadate/themes/default.date.css" id="theme_date">
+<link rel="stylesheet" href="/static/pickadate/themes/default.time.css" id="theme_time">
+<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway" />
+</head>
+<body>
+  <nav class="orange darken-3">
+      <div class="nav-wrapper">
+        <a href="{{url_for('home')}}" class="brand-logo" id="logo"><span style = "color: black">University</span> Food Finder</a>
+          <ul class="hide-on-med-and-down right">
+              <li>
+                        <form action="{{url_for('search')}}" method="get">
+                        <div class="input-field col s6 s12 white-text">
+
+                             <i class="white-text material-icons prefix">search</i>
+                                 <input type="text" name="keywords" placeholder="search" class="white-text">
+                                 <input type="submit" value="Submit" style="display:none">
+                           </div>
+                          </form>
+                </li>
+                <li><a href="{{url_for('home')}}" class="white-text" style="">ALL EVENTS</a></li>
+                <li><a href="{{url_for('all_orgs')}}" class="white-text" style="">ORGANIZATIONS</a></li>
+                <li><a href="{{url_for('map')}}" class="white-text" style="margin-right:150px">MAP</a></li>
+          </ul>
+      </div>
+    </nav>
+
+
+  <div class="container">
+    <div class="section">
+        <div class="row">
+        <!-- Form -->
+          <form class="col s12" method="post">
+            <div class="row">
+              <div class="input-field col s12">
+                <input id="org_name" name="org_name" type="text" class="validate">
+                <label for="org_name">Organization Name</label>
+              </div>
+            </div>
+            <div class="row">
+              <div class="input-field col s12">
+                <input id="location" name="location" type="text" class="validate">
+                <label for="location">Location</label>
+              </div>
+            </div>
+            <div class="row">
+              <div class="input-field col s12">
+                <input id="event_name" name="event_name" type="text" class="validate">
+                <label for="event_name">Event Name</label>
+              </div>
+            </div>
+            <div class="row">
+              <div class="input-field col s12">
+                <input id="url" name="url" type="text" class="validate">
+                <label for="url">URL</label>
+              </div>
+            </div>
+            <div class="row">
+              <div class="input-field col s12">
+                <input id="email" name="email" type="email" class="validate">
+                <label for="email">Email</label>
+              </div>
+            </div>
+            <div class="row">
+              <div class="input-field col s12">
+                <input id="description" name = "description" type="text" class="validate">
+                 <label for="description">Description</label>
+              </div>
+            </div>
+            <div class="row">
+              <div class="input-field col s12">
+                <input id="date" name="date" placeholder="YYYY-DD-MM" type="text" class="validate">
+                 <label for="date">Day of the event?</label>
+              </div>
+            </div>
+            <div class="row">
+              <div class="input-field col s12">
+                <input id="time" name = "time" placeholder="HH:MM:SC" type="text" class="validate">
+                 <label for="time">Time of the event?</label>
+              </div>
+            </div>
+            <div class="row">
+                <div class="col s12">
+                    <button class="btn waves-effect waves-light" type="submit" name="action">Submit
+                      <i class="material-icons right">send</i>
+                    </button>
+                </div>
+            </div>
+          </form>
+        </div>
+    </div>
+    <br><br>
+  </div>
+
+  <footer class="page-footer blue-grey">
+    <div class="container">
+      <div class="row">
+        <div class="col l6 s12">
+          <h5 class="white-text">Who are we</h5>
+          <p class="grey-text text-lighten-4">We are a team of college students working on this project.</p>
+        </div>
+        <div class="col l4 offset-l2 s12">
+          <h5 class="white-text">Want to add an event?</h5>
+          <a href="{{url_for('add_event')}}"class="white black-text center waves-effect waves-light btn">Sumbit an event!</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-copyright">
+      <div class="container">
+      © 2017 HackTX
+      <!-- <a class="grey-text text-lighten-4 right" href="#!">More Links</a> -->
+      </div>
+    </div>
+  </footer>
+
+
+  <!--  Scripts-->
+  <script src="/static/js/jquery-3.2.1.min.js.css"></script>
+  <script src="/static/js/materialize.js"></script>
+  <script src="/static/js/init.js"></script>
+  </body>
+</html>
