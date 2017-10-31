@@ -15,7 +15,7 @@ def connect_to_sql(connection_name,username,password,use_unicode,charset):
 
     else:
         db = MySQLdb.connect(
-            host='localhost', user='root', passwd='alexxxnovember25', db = "free_food"
+            host='localhost', user='root', passwd='', db = "free_food"
                             ,use_unicode = use_unicode, charset = charset)
 
     return db
