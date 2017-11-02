@@ -6,12 +6,13 @@ def connect_to_sql(connection_name,username,password,use_unicode,charset):
             # Connect using the unix socket located at
             # /cloudsql/cloudsql-connection-name.
             cloudsql_unix_socket = os.path.join(
-                '/cloudsql', CLOUDSQL_CONNECTION_NAME)
+                '/cloudsql', connection_name)
 
             db = MySQLdb.connect(
                 unix_socket=cloudsql_unix_socket,
-                user=CLOUDSQL_USER,
-                passwd=CLOUDSQL_PASSWORD)
+                user=username,
+                passwd=password,db = "free_food"
+                                ,use_unicode = use_unicode, charset = charset)
 
     else:
         db = MySQLdb.connect(

@@ -54,7 +54,7 @@ def home():
 
 @app.route("/insert_data")
 def insert_data():
-    with open("json.txt","r") as f:
+    with open("json 3.txt","r") as f:
         s = f.read()
         data = ast.literal_eval(s)
         events = parse_event_list(data)
@@ -106,6 +106,7 @@ def search():
     keywords = [s.lower() for s in query_string.split(" ")]
     logging.info("search route")
     events = dbhelper.getEventsWithKeywords(keywords)
+    logging.info(events);
     if(len(events) == 0):
         return render_template("index.html",error="no data matched that keyword")
     return render_template("index.html",events = events)

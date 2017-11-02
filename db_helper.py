@@ -11,22 +11,33 @@ class DBHelper:
         self.cursor = db.cursor()
 
     def getAllEvents(self):
-        self.cursor.execute("SELECT * from events ORDER BY datetime ASC LIMIT")
+        self.cursor.execute("SELECT * from events WHERE  datetime >= NOW() ORDER BY datetime ASC")
         return self.read_event_arr(self.cursor.fetchall())
 
     def getEvents(self,limit):
-        self.cursor.execute("SELECT * from events ORDER BY datetime ASC LIMIT %(limit)s",{"limit":limit})
+        self.cursor.execute("SELECT * from events WHERE datetime >= NOW() ORDER BY datetime ASC LIMIT %(limit)s",{"limit":limit})
         return self.read_event_arr(self.cursor.fetchall())
 
     def getEventsWithKeywords(self,keywords):
-        logging.info("using keyword : " + str(keywords))
-        logging.info(', '.join(['%s']*len(keywords)))
+        logging.info("using keywords : " + str(keywords))
+        #logging.info(', '.join(['%s']*len(keywords)))
+        data = ""
+        if(len(keywords) == 1):
+            data = "+"+keywords[0]
+        else:
+            data = '+' + '+ '.join(keywords)
         try:
-            self.cursor.execute("SELECT * FROM events WHERE MATCH (description)  AGAINST ((%s) IN BOOLEAN MODE) ORDER BY datetime DESC LIMIT 20",
-                                            '+'+' +'.join(keywords))
-        except:
+            logging.info("running select with MATCH")
+            logging.info("SELECT * FROM events WHERE MATCH (description) AGAINST ((%s) IN BOOLEAN MODE) AND datetime >= NOW()  ORDER BY datetime DESC LIMIT 20" %
+                                                [data])
+            self.cursor.execute("SELECT * FROM events WHERE MATCH (description) AGAINST ((%s) IN BOOLEAN MODE) AND datetime >= NOW() ORDER BY datetime DESC LIMIT 20",
+                                                [data])
+            logging.info("just executed query")
+            self.db.commit()
             logging.info(self.cursor._last_executed)
-        logging.info(self.cursor._last_executed)
+        except:
+            logging.info("error")
+            logging.info(self.cursor._last_executed)
         return self.read_event_arr(self.cursor.fetchall())
     def getEventByName(self,event_name):
         self.cursor.execute("SELECT * from events where name = %(event_name)s",{"event_name":event_name})
@@ -94,7 +105,7 @@ class DBHelper:
         return self.read_org(self.cursor.fetchone())
 
     def getEventsForOrg(self,org_name):
-        self.cursor.execute("SELECT * from events where org_name = %(org_name)s",{"org_name":org_name})
+        self.cursor.execute("SELECT * from events where org_name = %(org_name)s AND datetime >= NOW()",{"org_name":org_name})
         return self.read_event_arr(self.cursor.fetchall())
 
     def createOrganization(self,org):
