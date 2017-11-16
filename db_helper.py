@@ -1,21 +1,45 @@
-import MySQLdb
+from MySQLdb import OperationalError
 from organization import Organization
 from event import Event
 import logging
 import traceback
+from db_connector import connect_to_sql
 #helper class to access database
 class DBHelper:
 
-    def __init__(self,db):
+    def __init__(self,db,con_name,username,password,use_unicode,charset):
         self.db = db
         self.cursor = db.cursor()
+        self.con_name = con_name
+        self.username = username
+        self.password = password
+        self.use_unicode = use_unicode
+        self.charset = charset
+
+    def query_no_param(self,query_str):
+        try:
+            self.cursor = self.db.cursor()
+            self.cursor.execute(query_str)
+        except OperationalError:
+            self.db = connect_to_sql(self.con_name,self.username,self.password,self.use_unicode,self.charset)
+            self.cursor = self.db.cursor()
+            self.cursor.execute(query_str)
+
+    def query(self,query_str,params):
+        try:
+            self.cursor = self.db.cursor()
+            self.cursor.execute(query_str,params)
+        except OperationalError:
+            self.db = connect_to_sql(self.con_name,self.username,self.password,self.use_unicode,self.charset)
+            self.cursor = self.db.cursor()
+            self.cursor.execute(query_str,params)
 
     def getAllEvents(self):
-        self.cursor.execute("SELECT * from events WHERE  datetime >= NOW() ORDER BY datetime ASC")
+        self.query_no_param("SELECT * from events WHERE  datetime >= NOW() ORDER BY datetime ASC")
         return self.read_event_arr(self.cursor.fetchall())
 
     def getEvents(self,limit):
-        self.cursor.execute("SELECT * from events WHERE datetime >= NOW() ORDER BY datetime ASC LIMIT %(limit)s",{"limit":limit})
+        self.query("SELECT * from events WHERE datetime >= NOW() ORDER BY datetime ASC LIMIT %(limit)s",{"limit":limit})
         return self.read_event_arr(self.cursor.fetchall())
 
     def getEventsWithKeywords(self,keywords):
@@ -30,7 +54,7 @@ class DBHelper:
             logging.info("running select with MATCH")
             logging.info("SELECT * FROM events WHERE MATCH (description) AGAINST ((%s) IN BOOLEAN MODE) AND datetime >= NOW()  ORDER BY datetime DESC LIMIT 20" %
                                                 [data])
-            self.cursor.execute("SELECT * FROM events WHERE MATCH (description) AGAINST ((%s) IN BOOLEAN MODE) AND datetime >= NOW() ORDER BY datetime DESC LIMIT 20",
+            self.query("SELECT * FROM events WHERE MATCH (description) AGAINST ((%s) IN BOOLEAN MODE) AND datetime >= NOW() ORDER BY datetime DESC LIMIT 20",
                                                 [data])
             logging.info("just executed query")
             self.db.commit()
@@ -40,17 +64,17 @@ class DBHelper:
             logging.info(self.cursor._last_executed)
         return self.read_event_arr(self.cursor.fetchall())
     def getEventByName(self,event_name):
-        self.cursor.execute("SELECT * from events where name = %(event_name)s",{"event_name":event_name})
+        self.query("SELECT * from events where name = %(event_name)s",{"event_name":event_name})
         return self.read_event(self.cursor.fetchone())
 
     def getEventById(self,id):
-        self.cursor.execute("SELECT * from events where id = %(id)s",{"id":id})
+        self.query("SELECT * from events where id = %(id)s",{"id":id})
         return self.cursor.fetchone()
 
     def createEvent(self,event):
         try:
             logging.info("adding event")
-            self.cursor.execute("INSERT IGNORE INTO events VALUES (%(name)s,%(datetime)s,%(location)s,%(hyperlink)s,%(description)s,NULL,%(org_name)s,%(verified)s)",
+            self.query("INSERT IGNORE INTO events VALUES (%(name)s,%(datetime)s,%(location)s,%(hyperlink)s,%(description)s,NULL,%(org_name)s,%(verified)s)",
                             {"name":event.name,"datetime":event.datetime,"location":event.location,
                             "hyperlink":event.hyperlink,"description":event.description,"org_name":event.org_name,"verified":event.verified})
             self.db.commit()
@@ -83,7 +107,7 @@ class DBHelper:
                 if(index != len(events)-1):
                     events_str+=", "
             #logging.info("events_str: " + events_str)
-            self.cursor.execute("INSERT IGNORE INTO events VALUES " + events_str , tuple(events_spread))
+            self.query("INSERT IGNORE INTO events VALUES " + events_str , tuple(events_spread))
             self.db.commit()
         except Exception as err:
             print(traceback.format_exc())
@@ -93,24 +117,24 @@ class DBHelper:
         #logging.info(self.cursor._last_executed)
 
     def getAllOrgs(self):
-        self.cursor.execute("SELECT name, location, hyperlink, id from organizations")
+        self.query_no_param("SELECT name, location, hyperlink, id from organizations")
         return self.read_org_arr(self.cursor.fetchall())
 
     def getOrgByName(self,org_name):
-        self.cursor.execute("SELECT name, location, hyperlink, id from organizations where name = %(org_name)s",{"org_name":org_name})
+        self.query("SELECT name, location, hyperlink, id from organizations where name = %(org_name)s",{"org_name":org_name})
         return self.read_org(self.cursor.fetchone())
 
     def getOrgById(self,id):
-        self.cursor.execute("SELECT name, location, hyperlink, id from organizations where id = %(id)s",{"id":id})
+        self.query("SELECT name, location, hyperlink, id from organizations where id = %(id)s",{"id":id})
         return self.read_org(self.cursor.fetchone())
 
     def getEventsForOrg(self,org_name):
-        self.cursor.execute("SELECT * from events where org_name = %(org_name)s AND datetime >= NOW()",{"org_name":org_name})
+        self.query("SELECT * from events where org_name = %(org_name)s AND datetime >= NOW()",{"org_name":org_name})
         return self.read_event_arr(self.cursor.fetchall())
 
     def createOrganization(self,org):
         try:
-            self.cursor.execute("INSERT IGNORE INTO organizations VALUES (%(name)s,%(location)s,%(hyperlink)s,NULL)",
+            self.query("INSERT IGNORE INTO organizations VALUES (%(name)s,%(location)s,%(hyperlink)s,NULL)",
                             {"name":org.name,"location":org.location,"hyperlink":org.hyperlink,"id":org.id})
             self.db.commit()
         except:

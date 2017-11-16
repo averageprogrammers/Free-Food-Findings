@@ -34,7 +34,7 @@ CLOUDSQL_USER = os.environ.get('CLOUDSQL_USER')
 CLOUDSQL_PASSWORD = os.environ.get('CLOUDSQL_PASSWORD')
 
 db = dbc.connect_to_sql(CLOUDSQL_CONNECTION_NAME,CLOUDSQL_USER,CLOUDSQL_PASSWORD,use_unicode=True, charset="utf8")
-dbhelper = DBHelper(db)
+dbhelper = DBHelper(db,CLOUDSQL_CONNECTION_NAME,CLOUDSQL_USER,CLOUDSQL_PASSWORD,use_unicode=True, charset="utf8")
 # [START create_app]
 app = Flask(__name__)
 # [END create_app]
@@ -87,7 +87,7 @@ def email_form():
 def org(org_name):
     events = dbhelper.getEventsForOrg(org_name)
     if(len(events) == 0):
-        return render_template("index.html",error="organization does not exist")
+        return render_template("index.html",error="No events for this organization")
     return render_template("index.html",events=events)
 
 
