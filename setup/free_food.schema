@@ -1,0 +1,84 @@
+create database with utf-8 charset,
+
+QUERY TO REBUILD DATABASE:
+
+drop table if exists like_connectors;
+drop table if exists event_connectors;
+drop table if exists organizations;
+drop table if exists users;
+drop table if exists events;
+
+CREATE TABLE events (name VARCHAR(200) NOT NULL,
+                  datetime DATETIME NOT NULL,
+                  location VARCHAR(200) NOT NULL,
+                  hyperlink VARCHAR(200) NOT NULL,
+                  description TEXT,
+                  id MEDIUMINT NOT NULL AUTO_INCREMENT,
+                  org_name VARCHAR(50),
+                  verified TINYINT(1),
+                  image_link VARCHAR(200) NOT NULL,
+                  prev_sat DATE NOT NULL,
+                  next_sat DATE NOT NULL,
+                  likes MEDIUMINT DEFAULT 0,
+                  lat DOUBLE,
+                  long DOUBLE,  
+                  PRIMARY KEY(id),
+                  FULLTEXT(description),
+                  FULLTEXT(name),
+                  INDEX(name)
+);
+
+CREATE TABLE organizations (name VARCHAR(50) NOT NULL,
+                  location VARCHAR(200) NOT NULL,
+                  hyperlink VARCHAR(100) NOT NULL,
+                  id MEDIUMINT NOT NULL AUTO_INCREMENT,
+                  image_link VARCHAR(200) NOT NULL,
+                  PRIMARY KEY (id),
+                  UNIQUE (name),
+                  INDEX (name)
+);
+
+
+CREATE TABLE users (
+                    email VARCHAR(50),
+                    username VARCHAR(25),
+                    password VARCHAR(25),
+                    id MEDIUMINT NOT NULL AUTO_INCREMENT,
+                    PRIMARY KEY (id),
+                    UNIQUE (email),
+                    UNIQUE (username)
+                   );
+
+
+
+create TABLE event_connectors (
+                                user_id MEDIUMINT NOT NULL,
+                                event_id MEDIUMINT NOT NULL,
+                                datetime DATETIME NOT NULL,
+                                FOREIGN KEY (event_id) REFERENCES events(id),
+                                FOREIGN KEY (user_id) REFERENCES users(id)
+                   );
+
+create TABLE like_connectors (
+                                user_id MEDIUMINT NOT NULL,
+                                event_id MEDIUMINT NOT NULL,
+                                FOREIGN KEY (event_id) REFERENCES events(id),
+                                FOREIGN KEY (user_id) REFERENCES users(id)
+)
+
+IMPORTANT COMMANDS TO RUN AFTER CREATING TABLES:
+
+CREATE UNIQUE INDEX event_index ON event(name, prev_sat, next_sat)
+
+
+IGNORE BELOW TABLES:
+
+CREATE TABLE emails (
+                   user_id MEDIUMINT NOT NULL,
+                   event_id MEDIUMINT NOT NULL,
+                   FOREIGN KEY (event_id) REFERENCES events(id),
+                   FOREIGN KEY (user_id) REFERENCES users(id),
+                   datetime DATETIME NOT NULL,
+                   id MEDIUMINT NOT NULL AUTO_INCREMENT,
+                   PRIMARY KEY (id)
+                  );

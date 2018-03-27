@@ -6,14 +6,20 @@ threadsafe: true
 handlers:
 - url: /static
   static_dir: static
+- url: /cron/webscraper
+  script: webscraper.app
+  login: admin
 - url: /.*
   script: main.app
+
 # [END handlers]
 env_variables:
-  CLOUDSQL_CONNECTION_NAME: hacktx-2017:us-central1:free-food
+  CLOUDSQL_CONNECTION_NAME: freefoodfinder-191321:us-central1:free-food-info
   CLOUDSQL_USER: root
   CLOUDSQL_PASSWORD: averageprogrammers
 
 libraries:
 - name: MySQLdb
-  version: "latest"
+  version: latest
+- name: ssl
+  version: latest

@@ -1,0 +1,29 @@
+<nav class="orange darken-3">
+    <div class="nav-wrapper">
+      <a href="{{url_for('index')}}" class="brand-logo" id="logo"><span style = "color: black">University</span> Food Finder</a>
+        <ul class="hide-on-med-and-down right">
+
+          <li><form action="{{url_for('events.search')}}" method="get" style="text-align:center;margin-left:30px;">
+          <div class="input-field white-text darken-1">
+
+               <i class="white-text darken-1 material-icons prefix">search</i>
+                   <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                   <input type="text" name="keywords" placeholder="Search" class="white-text darken-1" style="width:175px;font-size:18px">
+                   <input type="submit" value="Submit" style="display:none">
+             </div>
+           </form></li>
+           {% if session.get('username',None) %}
+             <li><div><a href = "{{url_for('events.events_for_user')}}" class="white-text darken-1">My Events</a></div></li>
+           {% endif %}
+              <li><a href="{{url_for('index')}}" class="white-text darken-1" style="">All Events</a></li>
+              <li><a href="{{url_for('orgs.all_orgs')}}" class="white-text darken-1" style="">Organizations</a></li>
+              <li><a href="{{url_for('map.map')}}" class="white-text darken-1">Map</a></li>
+              {% if not session.get('username',None) %}
+                <li><div><a href = "{{url_for('accounts.login')}}" class="white-text darken-1">Log in</a></div></li>
+                <li><div><a href = "{{url_for('accounts.register')}}" class="white-text darken-1" style="margin-right: 100px">Register</a></div></li>
+              {% else %}
+                <li><div><a href = "{{url_for('accounts.logout')}}" class="white-text darken-1" style="margin-right: 100px">Log out</a></div></li>
+              {% endif %}
+        </ul>
+    </div>
+  </nav>

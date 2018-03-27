@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block title %}{{super()}}{% endblock title %}
+
+{% block head %}
+    {{ super() }}
+{% endblock head %}
+
+{% block nav %}
+    {{ super() }}
+{% endblock nav %}
+
+{% block content %}
+
+    <main>
+      <center>
+        <div class="section"></div>
+
+        <h5 class="grey-text text-darken-3" style="">Register an account</h5>
+
+        <div class="container">
+          <div class="row" style="display: inline-block;">
+
+            <form class="col s12 register-form" method="post">
+
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+
+              <div class='row'>
+                <div class='col s12'>
+                    <span class = "red-text">{{error}}</span>
+                </div>
+              </div>
+
+              <div class='row'>
+                <div class='input-field col s12'>
+                  <input class='validate' type='email' name='email' id='email' value="{{entered_email}}" required/>
+                  <label for='email' class="{{ 'active' if entered_email }}">Enter your email</label>
+                </div>
+              </div>
+
+              <div class='row'>
+                <div class='input-field col s12'>
+                  <input class='validate' type="text" name='username' id="username" value="{{entered_username}}" required/>
+                  <label for="username" class="{{ 'active' if entered_username }}">Enter a username</label>
+                </div>
+              </div>
+
+              <div class='row'>
+                <div class='input-field col s12'>
+                  <input class='validate' type='password' name='password' id='password' value="{{entered_password}}" required/>
+                  <label for='password' class="{{ 'active' if entered_password }}">Enter a password</label>
+                </div>
+                <label style='float: right;'>
+                  <a class='grey-text text-darken-3' href='#!'><b>Forgot Password?</b></a>
+                </label>
+              </div>
+
+              <br />
+              <center>
+                <div class='row'>
+                  <button type='submit' name='btn_login' class='col s12 btn btn-large waves-effect grey darken-3 orange-text' style = "font-weight:bold;box-shadow: 0px 0px 0px 0px rgba(0,0,0,0)">Register</button>
+                </div>
+              </center>
+            </form>
+          </div>
+        </div>
+        <a href="{{url_for('accounts.login')}}" class = "orange-text">Log in</a>
+      </center>
+
+      <div class="section"></div>
+      <div class="section"></div>
+
+    </main>
+
+{% endblock content %}
+
+
+{% block footer %}
+    {{super()}}
+{% endblock footer %}

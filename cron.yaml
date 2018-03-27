@@ -1,0 +1,4 @@
+cron:
+- description: "webscrapes free food events from websites"
+  url: /cron/webscraper
+  schedule: every 1 hours

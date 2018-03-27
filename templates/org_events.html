@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}{{super()}}{% endblock title %}
+
+{% block head %}
+    {{ super() }}
+{% endblock head %}
+
+{% block nav %}
+    {{ super() }}
+{% endblock nav %}
+
+{% block content %}
+
+    {% include 'pagination_org_events.html' %}
+
+    <div class="row" style = "padding:25px;padding-top:35px">
+    {% for e in events %}
+          <div class="col m4 l4" style="">
+            <a href="{{url_for('events.one_event',event_id=e.id)}}" target="_blank">
+              <div class = "div-img" style="background-image:url('{{e.image_link}}')">
+                <div class="tint-div-img" class="orange-text" style="">
+                </div>
+                <div style="z-index:5;position:absolute;bottom:0;left:0;width:100%;text-align:left;padding:15px;background:#FFFFFE" class = "orange-text">
+                  <span class="event-date">{{e.datetime}}</span>
+                  <span style="font-weight:bold; font-size:18px;display:block;padding-bottom:0px;color:#282C35;" class="event-name">{{e.name}}</span>
+                  <div style="padding-top: 5px">
+                        <a href="{{url_for('events.one_event',event_id=e.id)}}" style="font-weight:light;" class="grey-text text-darken-2">{{e.location}}</a>
+                  <a href="javascript:saveEvent({{e.id}})" style = "float:right;margin-right:0px;margin-top:3px"><i class="fas fa-plus grey-text text-darken-3" style = "font-size:18px"></i></a>
+                  <a href="javascript:likeEvent({{e.id}})" style="margin-right:10px;float:right;margin-top:3px"><i class="fas fa-thumbs-up grey-text text-darken-3" id = "thumb{{e.id}}" style="font-size:18px"></i></a>
+
+                </div>
+                </div>
+              </div>
+            </a>
+          </div>
+    {% endfor %}
+    </div>
+
+    {% include 'pagination_org_events.html' %}
+
+    <div id="snackbar"></div>
+
+{% endblock content %}
+
+
+{% block footer %}
+    {{super()}}
+{% endblock footer %}

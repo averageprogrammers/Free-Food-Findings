@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    {% block head %}
+
+        {% include 'head.html' %}
+
+    {% endblock head %}
+
+</head>
+
+<body>
+
+    {% block nav %}
+
+        {% include 'nav.html' %}
+
+    {% endblock nav %}
+
+    <div id = "content-container">
+
+        {% block content %}
+
+        {% endblock content %}
+
+    </div>
+
+    {% block footer %}
+
+        {% include 'footer.html' %}
+
+    {% endblock footer %}
+
+
+</body>
